@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+
+
+<style>
+    body{font-family:"Gill Sans",sans-serif;
+        font-size:14px;
+        color:#000000;
+        font-weight:400;
+        line-height:1.8;
+        -webkit-font-smoothing:antialiased;
+        margin: 0px;}
+        
+
+    .container{
+    position:relative;
+    padding: 0px  4.167% 0px 4.167%;
+    }
+
+    .bar{
+        position:relative;
+        padding-top: 24px;
+        padding-bottom: 18px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .case{
+        position:relative;
+        padding-bottom: 18px;
+    }
+    
+    input{
+        border-color:#DEDEDE;
+        border-width: 1px;
+        padding: 8px 12px;
+        width: 300px;
+        border-radius: 4px;
+        margin-right: 16px;
+        border-style:double;
+    }
+    input:focus{
+        border-color: #000000;
+        outline: 0;
+    }
+
+
+    .bar input.btn_search{
+        color: rgba(255, 255, 255, 0);
+        background-color: #2185D0;
+        border-radius: 4px;
+        background-image:url("../demo html/static/icon_search.png");
+        border-width: 0px;
+        width: 34px;height: 34px;
+    }
+    .bar input.btn_search:hover{
+        background-color: #1a6fb1;
+    }
+    .bar input.btn_search:active{
+        background-color: #0c5288;
+    }
+    #line{
+        border-bottom: 1px solid #E2E2E3;
+    }
+        
+    .tag {
+        background-color: #B22222;
+        padding:4px 0px;
+        font-size:10px;
+        color:white;
+        line-height:14px;
+        text-align: center;
+        border-radius: 4px;
+    }
+    .tag p{
+        font-size:10px;
+        color:white;
+        font-weight: 800;
+        margin-block-start: 0em;
+        margin-block-end: 0em;
+    }
+    .img-box{
+        width:100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #E2E2E3;
+        overflow: hidden;
+    }
+    .mat-box{
+        width:100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #E2E2E3;
+        overflow: hidden;
+    }
+
+    .image {
+        display: flex;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .title{
+        font-size:16px;
+        font-weight:600;
+        padding-bottom: 8px;
+    }
+    .el-card {
+        border: 0px;
+        border-radius: 0px;
+    }
+    .el-card.is-always-shadow{
+        box-shadow: none;
+    }
+    .el-dialog__headerbtn{
+        right:10px;
+        top:10px;
+    }
+    .el-dialog__body{
+        padding: 0px;
+    }
+    .el-dialog__header{
+        padding: 0px;
+    }
+    .el-dialog{
+        margin-top: 0 !important;
+        top:50%;
+        transform: translateY(-50%);
+    }
+    @media (max-width: 767px){.r-mat-box{padding-right:0;margin-right:0;border-right: 0;padding-bottom:20px;margin-bottom:18px;border-bottom: 1px solid #E2E2E3;}}
+    @media (min-width: 768px){.r-mat-box{padding-right:0;margin-right:0;border-right: 0;padding-bottom:20px;margin-bottom:18px;border-bottom: 1px solid #E2E2E3;}}
+    @media (min-width: 1200px){.r-mat-box{padding-right:20px;margin-right:-21px;border-right: 1px solid #E2E2E3;padding-bottom:0;margin-bottom:0;border-bottom:0;}}
+
+</style>
+
+<body>
+
+<div id="search" class="container">
+    <div class="bar">
+        <input type="text"  v-model="slogan_c" placeholder="请输入一段广告宣传（不超过20字）">
+        <input type="text"  v-model="slogan_e" placeholder="英文文本（选填）">
+        <input type="button" class="btn_search" value=1 @click='start()'>
+        <div style="margin-top: 24px;"id="line"></div>
+    </div>
+</div>
+<div id="r_banner" class="container">
+    <div class="case">
+        <div class="title">相似banner推荐</div>
+        <el-row style="margin-left: -20px;margin-right: -20px; text-align: center;overflow: hidden;">
+            <el-col v-for=" (b,index) in banners" :key="index" class="el-col-xs-24 el-col-sm-12 el-col-lg-6" style="text-align: center; margin-bottom:18px;margin-left:0px; padding-right: 20px; padding-left: 20px">
+                <el-card :body-style="{ padding: '0px'}" style="text-align: center; padding-right:20px; margin-right:-21px; border-right: 1px solid #E2E2E3;">
+                    <div class="img-box" id="imgbox" >
+                        <img v-bind:src="b.url" class="image" @click="showDialog(b)">
+                    </div>
+                    <el-row style="margin-left: -5px;margin-right: -5px; text-align: center;">
+                        <el-col v-for=" (t,index) in b.tags" :key="index" class="el-col-xs-8 el-col-sm-8 el-col-lg-8" style=" text-align: center; margin-top:12px;margin-left:0px; padding-right: 5px; padding-left: 5px">
+                            <div v-if="t.tag==1"><taglist1></taglist1></div>
+                            <div v-else-if="t.tag==2"><taglist2></taglist2></div>
+                            <div v-else-if="t.tag==3"><taglist3></taglist3></div>
+                            <div v-else-if="t.tag==4"><taglist4></taglist4></div>
+                            <div v-else-if="t.tag==5"><taglist5></taglist5></div>
+                            <div v-else-if="t.tag==6"><taglist6></taglist6></div>
+                            <div v-else-if="t.tag==7"><taglist7></taglist7></div>
+                            <div v-else-if="t.tag==8"><taglist8></taglist8></div>
+                            <div v-else-if="t.tag==9"><taglist9></taglist9></div>
+                            <div v-else-if="t.tag==10"><taglist10></taglist10></div>
+                            <div v-else-if="t.tag==11"><taglist11></taglist11></div>
+                            <div v-else-if="t.tag==12"><taglist12></taglist12></div>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </el-col>
+        </el-row>
+        <div style="margin-top: 6px;"id="line"></div>
+    </div>
+    <el-dialog :visible.sync="dialogVisible" width=fit-content>
+        <img v-bind:src="dialog_b.url" alt="" style="max-width:92vw;max-height:92vh;display: block;">
+    </el-dialog>
+</div>
+
+
+<div class="container" style="margin-left: -20px;margin-right: -20px;">
+    <div id="r_material">
+        <el-col class="el-col-xs-24 el-col-sm-24 el-col-lg-6" style="margin-left:0px; padding-right: 20px; padding-left: 20px">
+            <div class="title">素材推荐</div>
+            <div class="r-mat-box">
+                <el-row style="margin-left: -10px;margin-right: -10px; text-align: center;">
+                    <el-col v-for=" (m,index) in materials" :key="index" class="el-col-xs-8 el-col-sm-8 el-col-lg-8"style=" text-align: center;margin-left:0px; padding-right: 10px; padding-left: 10px;padding-bottom: 10px">
+                        <div id="matbox" class="mat-box" style=" text-align: center;">
+                            <img v-bind:src="m.url" class="image" @click="showDialog(m)">
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+        </el-col>
+        <el-dialog :visible.sync="dialogVisible" width=fit-content>
+            <img v-bind:src="dialog_m.url" alt="" style="max-width:92vw;max-height:92vh;display: block;">
+        </el-dialog>
+    </div>
+    <div id="r_font">
+        <el-col class="el-col-xs-24 el-col-sm-24 el-col-lg-18" style="margin-left:0px; padding-right: 20px; padding-left: 20px;padding-bottom: 50px;" >
+            <div class="title">字体推荐</div>
+            <div style="margin-left: -20px;margin-right: -20px;overflow: hidden;">
+                <el-col class="el-col-xs-24 el-col-sm-12 el-col-lg-12"style="margin-left:0px;">
+                    <div v-for=" (f_c,index) in fonts_c" :key="index"style="padding-right:20px;padding-left:20px ">
+                        <div style="padding-right:20px; margin-right:-21px; border-right: 1px solid #E2E2E3;">
+                            <img v-bind:src="f_c.img" style="margin-bottom:-30px;max-height:82px;max-width:100%">
+                            <div>
+                                {{f_c.name}}
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col class="el-col-xs-24 el-col-sm-12 el-col-lg-12" style="margin-left:0px;">
+                    <div v-for=" (f_e,index) in fonts_e" :key="index" style="padding-right:20px;padding-left:20px" >
+                        <div style="padding-right:20px; margin-right:-21px; border-right: 1px solid #E2E2E3;">
+                            <img v-bind:src="f_e.img"style="margin-bottom:-30px ;max-height:82px;max-width:100%;">
+                            <div>
+                                {{f_e.name}}
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
+            </div>
+        </el-col>
+    </div>
+
+</div>
+
+</body>
+
+
+
+
+
+<script>
+
+var a = document.getElementById("imgbox");
+    a.style.height=a.offsetWidth*0.588+"px";
+
+var b = document.getElementById("matbox");
+    b.style.height=b.offsetWidth+"px";
+
+
+Vue.component('taglist1',{
+    template:'<div class="tag" style="background-color: #767676;"><p>科技</p>（精密/阳刚/硬朗）</div>'
+})
+Vue.component('taglist2',{
+    template:'<div class="tag" style="background-color: #A5673F;"><p>商务</p>（正式/稳重/权威）</div>'
+})
+Vue.component('taglist3',{
+    template:'<div class="tag" style="background-color: #6435C9;"><p>炫酷</p>（光感/霓虹/夺目）</div>'
+})
+Vue.component('taglist4',{
+    template:'<div class="tag" style="background-color: #999999;"><p>简约</p>（纯净/简明/留白）</div>'
+})
+Vue.component('taglist5',{
+    template:'<div class="tag" style="background-color: #00B5AD;"><p>清新</p>（天然/文艺/雅致）</div>'
+})
+Vue.component('taglist6',{
+    template:'<div class="tag" style="background-color: #A333C8;"><p>梦幻</p>（浪漫/轻盈/柔美）</div>'
+})
+Vue.component('taglist7',{
+    template:'<div class="tag" style="background-color: #B22222;"><p>中国风</p>（民俗/传统/古典）</div>'
+})
+Vue.component('taglist8',{
+    template:'<div class="tag" style="background-color: #DB2828;"><p>喜庆</p>（热闹/奔放/饱满）</div>'
+})
+Vue.component('taglist9',{
+    template:'<div class="tag" style="background-color: #E03997;"><p>可爱</p>（甜美/童趣/卡通）</div>'
+})
+Vue.component('taglist10',{
+    template:'<div class="tag" style="background-color: #FBBD08;"><p>华丽</p>（尊贵/奢华/瑰丽）</div>'
+})
+Vue.component('taglist11',{
+    template:'<div class="tag" style="background-color: #F2711C;"><p>温馨</p>（温暖/和煦/生活感）</div>'
+})
+Vue.component('taglist12',{
+    template:'<div class="tag" style="background-color: #2185D0;"><p>动感</p>（朝气/活力/青春）</div>'
+})
+
+var vue1=new Vue({
+    el: '#search',
+    data: {
+        slogan_c:[],
+        slogan_e:[],
+    }
+})
+
+var vue2=new Vue({
+    el: '#r_banner',
+    data() {
+        return{           
+            banners:[
+                {
+                    url: '../demo html/static/banner/banner1.jpg',
+                    tags:[
+                        {tag:'1'},
+                        {tag:'2'},
+                        {tag:'3'}
+                    ]
+                },
+                {
+                    url:'../demo html/static/banner/banner2.jpg',
+                    tags:[
+                        {tag:"4"},
+                        {tag:"5"},
+                        {tag:"6"}
+                    ]
+                },
+                {
+                    url:'../demo html/static/banner/banner3.jpg',
+                    tags:[
+                        {tag:"7"},
+                        {tag:"8"},
+                        {tag:"9"}
+                    ]
+                },
+                {
+                    url:'../demo html/static/banner/banner7.jpg',
+                    tags:[
+                        {tag:"10"},
+                        {tag:"11"},
+                        {tag:"12"}
+                    ]
+                }
+            ],
+            dialog_b:{
+                url: [],
+            },
+            dialogVisible: false,
+    }},
+
+
+    methods: {
+        showDialog(b) {
+            this.dialogVisible = true
+            this.dialog_b.url = b.url
+        }
+    },
+})
+
+var vue3=new Vue({
+    el: '#r_material',
+    data() {
+        return{           
+            materials:[
+                {
+                    url:'../demo html/static/material/A-18.png',
+                },
+                {
+                    url:'../demo html/static/material/A-19.png',
+                },
+                {
+                    url:'../demo html/static/material/B-76.png',
+                },
+                {
+                    url:'../demo html/static/material/B-85.png',
+                },
+                {
+                    url:'../demo html/static/material/C-29.png',
+                },
+                {
+                    url:'../demo html/static/material/C-52.png',
+                },
+                {
+                    url:'../demo html/static/material/E-04.png',
+                },
+                {
+                    url:'../demo html/static/material/E-17.png',
+                },
+                {
+                    url:'../demo html/static/material/E-92.png',
+                },
+            ],
+            dialog_m:{
+                url: [],
+            },
+            dialogVisible: false,
+    }},
+
+
+    methods: {
+        showDialog(m) {
+            this.dialogVisible = true
+            this.dialog_m.url = m.url
+        }
+    },
+})
+
+var vue3=new Vue({
+    el: '#r_font',
+    data() {
+        return{           
+            fonts_c:[
+                {
+                    img:'../demo html/static/font/douyuFont-2 1.png',
+                    name:'斗鱼追光体.ttf',
+                },
+                {
+                    img:'../demo html/static/font/ChaoZiSheGuoFengKaiJianFan-Shan(REEJI-CHAO-RuikaiGBT-Flash)-2 1.png',
+                    name:'潮字社国风睿楷简繁-闪.ttf',
+                },
+                {
+                    img:'../demo html/static/font/FZAiSJW 1.png',
+                    name:'方正爱莎体.ttf',
+                },
+            ],
+            fonts_e:[
+                {
+                    img:'../demo html/static/font/Acme-Regular 1.png',
+                    name:'Acme-Regular.ttf',
+                },
+                {
+                    img:'../demo html/static/font/AdventPro-SemiBold 1.png',
+                    name:'AdventPro-SemiBold.ttf',
+                },
+                {
+                    img:'../demo html/static/font/Bentham-Regular 1.png',
+                    name:'Bentham-Regular.ttf',
+                },
+            ],
+
+    }},
+})
+</script>
+
+
+
+</html>
